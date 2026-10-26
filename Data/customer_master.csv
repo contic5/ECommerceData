@@ -1,4 +1,4 @@
-customer_id,customer_name,customer_age,gender,customer_segment,customer_city,customer_state,customer_country,region,customer_postal_code,customer_acquisition_cost
+CustomerId,CustomerName,CustomerAge,Gender,CustomerSegment,CustomerCity,CustomerState,CustomerCountry,Region,CustomerPostalCode,CustomerAcquisitionCost
 CUST-000001,Donna Miller,54,Female,Consumer,Laurenland,Dubai,UAE,South,11253,13.58
 CUST-000002,Joseph James,61,Male,Consumer,Lake Peter,Lower Saxony,Germany,North,47778,27.45
 CUST-000003,Daniel Smith,47,Male,Consumer,Seanview,North Rhine,Germany,West,13900,31.53

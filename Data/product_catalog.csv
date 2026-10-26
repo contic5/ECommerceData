@@ -1,4 +1,4 @@
-product_id,product_name,product_category,product_subcategory,brand,supplier,unit_price,product_cost,product_rating
+ProductId,ProductName,ProductCategory,ProductSubCategory,Brand,Supplier,UnitPrice,ProductCost,ProductRating
 PROD-000001,Apple Sharable bifurcated algorithm Smartphones,Electronics,Smartphones,Apple,Alibaba,686.9,474.06,4.3
 PROD-000002,Google User-centric even-keeled encryption Smartphones,Electronics,Smartphones,Google,Euro Logistics,978.26,519.66,2.9
 PROD-000003,LG Face-to-face client-driven support Smartphones,Electronics,Smartphones,LG,Asian Manufacturing,275.51,185.48,3.9

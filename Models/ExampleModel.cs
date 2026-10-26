@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace NFLPredictionData.Models;
+namespace EcommerceData.Models;
 
 public class Movie
 {
