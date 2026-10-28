@@ -2,8 +2,8 @@ namespace EcommerceData.Models;
 
 public class Order
 {
-    public string OrderId { get; set; }
-    public string ProductId { get; set; }
+    public string OrderId { get; set; }=string.Empty;
+    public string ProductId { get; set; }=string.Empty;
     public int Quantity { get; set; }
     public decimal UnitPrice { get; set; }
     public decimal DiscountPercentage { get; set; }
