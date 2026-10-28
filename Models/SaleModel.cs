@@ -4,14 +4,14 @@ namespace EcommerceData.Models;
 
 public class Sale
 {
-    public int OrderId { get; set; }
+    public string OrderId { get; set; }
     public DateTime OrderDate { get; set; }
     public TimeSpan OrderTime { get; set; }
     public string OrderStatus { get; set; } = string.Empty;
     public string SalesChannel { get; set; } = string.Empty;
 
     // Customer Information
-    public int CustomerId { get; set; }
+    public string CustomerId { get; set; }
     public string CustomerName { get; set; } = string.Empty;
     public int CustomerAge { get; set; }
     public string Gender { get; set; } = string.Empty;
@@ -31,8 +31,8 @@ public class Sale
     // Shipping and Delivery
     public string ShippingMethod { get; set; } = string.Empty;
     public string Warehouse { get; set; } = string.Empty;
-    public int DeliveryDays { get; set; }
-    public int EstimatedDeliveryDays { get; set; }
+    public decimal DeliveryDays { get; set; }
+    public decimal EstimatedDeliveryDays { get; set; }
     public string DeliveryStatus { get; set; } = string.Empty;
 
     // Returns and Reviews
