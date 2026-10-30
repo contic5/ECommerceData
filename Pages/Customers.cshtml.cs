@@ -8,6 +8,8 @@ namespace ECommerceData.Pages;
 
 public class CustomersModel : PageModel
 {
+    [BindProperty(SupportsGet = true)]
+    public string CustomerCountry { get; set; }="";
     public void OnGet()
     {
         long startMilliseconds = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
@@ -17,6 +19,10 @@ public class CustomersModel : PageModel
         var csv=new CsvReader(reader,CultureInfo.InvariantCulture);
         var customers=csv.GetRecords<Customer>().ToList();
         Console.WriteLine("Customers Loaded");
+        if(CustomerCountry!="")
+        {
+            customers= (List<Customer>) customers.Where(customer => customer.CustomerCountry==CustomerCountry);
+        }
 
         long endMilliseconds = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
