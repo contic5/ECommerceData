@@ -7,5 +7,58 @@
 
 <div class="text-center">
     <h1 class="display-4">Customers</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h2>Filters</h2>
+    <form>
+    <label asp-for="CustomerCountry">Select a Country:</label>
+    <select asp-for="CustomerCountry" asp-items="Model.CustomerCountryOptions" class="form-control">
+        <option value="">-- Choose a Country --</option>
+    </select>
+
+    <label asp-for="CustomerSegment">Select a Customer Segment:</label>
+    <select asp-for="CustomerSegment" asp-items="Model.CustomerSegmentOptions" class="form-control">
+        <option value="">-- Choose a Customer Segment --</option>
+    </select>
+
+    <label asp-for="Gender">Select a Gender:</label>
+    <select asp-for="Gender" asp-items="Model.GenderOptions" class="form-control">
+        <option value="">-- Choose a Gender --</option>
+    </select>
+
+    <button type="submit">Submit</button>
+    </form>
+
+    <h2>Customers</h2>
+    <table>
+    <thead>
+    <tr>
+    <th>Name</th>
+    <th>Age</th>
+    <th>Gender</th>
+    <th>Segment</th>
+    <th>City</th>
+    <th>State</th>
+    <th>Country</th>
+    <th>Region</th>
+    <th>Postal Code</th>
+    <th>Acquisition Cost</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach(Customer customer in Model.Customers)
+    {
+        <tr>
+        <td>@customer.CustomerName</td>
+        <td>@customer.CustomerAge</td>
+        <td>@customer.Gender</td>
+        <td>@customer.CustomerSegment</td>
+        <td>@customer.CustomerCity</td>
+        <td>@customer.CustomerState</td>
+        <td>@customer.CustomerCountry</td>
+        <td>@customer.Region</td>
+        <td>@customer.CustomerPostalCode</td>
+        <td>@customer.CustomerAcquisitionCost</td>
+        </tr>
+    }
+    </tbody>
+    </table>
 </div>

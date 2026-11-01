@@ -1,15 +1,44 @@
 using System.Globalization;
+using System.Xml.Serialization;
 using CsvHelper;
 using EcommerceData.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ECommerceData.Pages;
 
 public class CustomersModel : PageModel
 {
+
+    public List<SelectListItem> CustomerCountryOptions { get; set; } = new();
     [BindProperty(SupportsGet = true)]
     public string CustomerCountry { get; set; }="";
+
+    public List<SelectListItem> CustomerSegmentOptions { get; set; } = new();
+
+    [BindProperty(SupportsGet = true)]
+    public string CustomerSegment { get; set; }="";
+
+    public List<SelectListItem> GenderOptions { get; set; } = new();
+
+    [BindProperty(SupportsGet = true)]
+    public string Gender { get; set; }="";
+
+    public List<Customer> Customers {get; set;}
+
+    public List<SelectListItem> CreateSelectListItems(List<Customer> allCustomers,string key)
+    {
+        var property = typeof(Customer).GetProperty(key) ?? throw new ArgumentException($"No public Customer property named '{key}'.", nameof(key));
+        var allValues = allCustomers.Where(c => c is not null).Select(c => property.GetValue(c)).Where(value => value is not null);
+        var uniqueValues=allValues.Distinct().OrderBy(val => val).ToList();
+        List<SelectListItem>  res= uniqueValues.Select(val => new SelectListItem
+        {
+            Value = val.ToString(),
+            Text = val.ToString(),
+        }).ToList();
+        return res;
+    }
     public void OnGet()
     {
         long startMilliseconds = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
@@ -17,11 +46,28 @@ public class CustomersModel : PageModel
         Console.WriteLine("Customers Loading");
         var reader = new StreamReader("Data/customer_master.csv"); 
         var csv=new CsvReader(reader,CultureInfo.InvariantCulture);
-        var customers=csv.GetRecords<Customer>().ToList();
+        List<Customer> allCustomers=csv.GetRecords<Customer>().ToList();
         Console.WriteLine("Customers Loaded");
-        if(CustomerCountry!="")
+        
+        Customers=allCustomers;
+        CustomerCountryOptions=CreateSelectListItems(allCustomers,"CustomerCountry");
+        CustomerSegmentOptions=CreateSelectListItems(allCustomers,"CustomerSegment");
+        GenderOptions=CreateSelectListItems(allCustomers,"Gender");
+
+        if(!string.IsNullOrWhiteSpace(CustomerCountry))
         {
-            customers= (List<Customer>) customers.Where(customer => customer.CustomerCountry==CustomerCountry);
+            Console.WriteLine($"Target Country: {CustomerCountry}");
+            Customers= allCustomers.Where(customer => customer.CustomerCountry==CustomerCountry).ToList();
+        }
+        if(!string.IsNullOrWhiteSpace(CustomerSegment))
+        {
+            Console.WriteLine($"Target Customer Segment: {CustomerSegment}");
+            Customers= allCustomers.Where(customer => customer.CustomerSegment==CustomerSegment).ToList();
+        }
+        if(!string.IsNullOrWhiteSpace(Gender))
+        {
+            Console.WriteLine($"Target Gender: {Gender}");
+            Customers= allCustomers.Where(customer => customer.Gender==Gender).ToList();
         }
 
         long endMilliseconds = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
