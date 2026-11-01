@@ -8,6 +8,7 @@ namespace ECommerceData.Pages;
 
 public class OrdersModel : PageModel
 {
+    public List<Order> Orders {get; set;}
     public void OnGet()
     {
         long startMilliseconds = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
@@ -15,7 +16,7 @@ public class OrdersModel : PageModel
         Console.WriteLine("Orders Loading");
         var reader=new StreamReader("Data/order_items.csv");
         var csv=new CsvReader(reader,CultureInfo.InvariantCulture);
-        var orders=csv.GetRecords<Order>().ToList();
+        Orders=csv.GetRecords<Order>().ToList();
         Console.WriteLine("Orders Loaded");
 
         long endMilliseconds = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();

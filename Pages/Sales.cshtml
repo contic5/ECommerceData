@@ -1,4 +1,90 @@
 ﻿@page
-@model ECommerceData.Pages.SalesModel
+@using EcommerceData.Models
+@model SalesModel
 @{
+    ViewData["Title"] = "Home page";
 }
+
+<div class="text-center">
+    <h1 class="display-4">Products</h1>
+    <h2>Filters</h2>
+    <form>
+    <label asp-for="OrderStatus">Select a Category:</label>
+    <select asp-for="OrderStatus" asp-items="Model.OrderStatusOptions" class="form-control">
+        <option value="">-- Choose a Category --</option>
+    </select>
+
+    <label asp-for="SalesChannel">Select a SubCategory:</label>
+    <select asp-for="SalesChannel" asp-items="Model.SalesChannelOptions" class="form-control">
+        <option value="">-- Choose a SubCategory --</option>
+    </select>
+
+    <label asp-for="CustomerSegment">Select a Brand:</label>
+    <select asp-for="CustomerSegment" asp-items="Model.CustomerSegmentOptions" class="form-control">
+        <option value="">-- Choose a Brand --</option>
+    </select>
+
+    <label asp-for="CustomerCountry">Select a Supplier:</label>
+    <select asp-for="CustomerCountry" asp-items="Model.CustomerCountryOptions" class="form-control">
+        <option value="">-- Choose a Supplier --</option>
+    </select>
+
+    <label asp-for="PaymentMethod">Select a Supplier:</label>
+    <select asp-for="PaymentMethod" asp-items="Model.PaymentMethodOptions" class="form-control">
+        <option value="">-- Choose a Supplier --</option>
+    </select>
+
+    <label asp-for="PaymentStatus">Select a Supplier:</label>
+    <select asp-for="PaymentStatus" asp-items="Model.PaymentStatusOptions" class="form-control">
+        <option value="">-- Choose a Supplier --</option>
+    </select>
+
+    <label asp-for="ShippingMethod">Select a Supplier:</label>
+    <select asp-for="ShippingMethod" asp-items="Model.ShippingMethodOptions" class="form-control">
+        <option value="">-- Choose a Supplier --</option>
+    </select>
+
+    <label asp-for="ReturnStatus">Select a Supplier:</label>
+    <select asp-for="ReturnStatus" asp-items="Model.ReturnStatusOptions" class="form-control">
+        <option value="">-- Choose a Supplier --</option>
+    </select>
+
+    <label asp-for="MarketingChannel">Select a Supplier:</label>
+    <select asp-for="MarketingChannel" asp-items="Model.MarketingChannelOptions" class="form-control">
+        <option value="">-- Choose a Supplier --</option>
+    </select>
+
+    <button type="submit">Submit</button>
+    </form>
+
+    <h2>Sales</h2>
+    <table>
+    <thead>
+    <tr>
+    <th>Name</th>
+    <th>Category</th>
+    <th>SubCategory</th>
+    <th>Brand</th>
+    <th>City</th>
+    <th>UnitPrice</th>
+    <th>ProductCost</th>
+    <th>ProductRating</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach(Sale sale in Model.Sales)
+    {
+        <tr>
+        <td>@product.ProductName</td>
+        <td>@product.ProductCategory</td>
+        <td>@product.ProductSubCategory</td>
+        <td>@product.Brand</td>
+        <td>@product.Supplier</td>
+        <td>@product.UnitPrice</td>
+        <td>@product.ProductCost</td>
+        <td>@product.ProductRating</td>
+        </tr>
+    }
+    </tbody>
+    </table>
+</div>

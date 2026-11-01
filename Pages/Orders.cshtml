@@ -1,4 +1,45 @@
 ﻿@page
-@model ECommerceData.Pages.OrdersModel
+@using EcommerceData.Models
+@model OrdersModel
 @{
+    ViewData["Title"] = "Home page";
 }
+
+<div class="text-center">
+    <h1 class="display-4">Orders</h1>
+    <table>
+    <thead>
+    <tr>
+    <th>OrderId</th>
+    <th>ProductId</th>
+    <th>Quantity</th>
+    <th>UnitPrice</th>
+    <th>DiscountPercentage</th>
+    <th>DiscountAmount</th>
+    <th>GrossSales</th>
+    <th>TaxAmount</th>
+    <th>NetSales</th>
+    <th>ProductCost</th>
+    <th>Profit</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach(Order order in Model.Orders)
+    {
+        <tr>
+        <td>@order.OrderId</td>
+        <td>@order.ProductId</td>
+        <td>@order.Quantity</td>
+        <td>@order.UnitPrice</td>
+        <td>@order.DiscountPercentage</td>
+        <td>@order.DiscountAmount</td>
+        <td>@order.GrossSales</td>
+        <td>@order.TaxAmount</td>
+        <td>@order.NetSales</td>
+        <td>@order.ProductCost</td>
+        <td>@order.Profit</td>
+        </tr>
+    }
+    </tbody>
+    </table>
+</div>
