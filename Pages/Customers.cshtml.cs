@@ -57,17 +57,17 @@ public class CustomersModel : PageModel
         if(!string.IsNullOrWhiteSpace(CustomerCountry))
         {
             Console.WriteLine($"Target Country: {CustomerCountry}");
-            Customers= allCustomers.Where(customer => customer.CustomerCountry==CustomerCountry).ToList();
+            Customers= Customers.Where(customer => customer.CustomerCountry==CustomerCountry).ToList();
         }
         if(!string.IsNullOrWhiteSpace(CustomerSegment))
         {
             Console.WriteLine($"Target Customer Segment: {CustomerSegment}");
-            Customers= allCustomers.Where(customer => customer.CustomerSegment==CustomerSegment).ToList();
+            Customers= Customers.Where(customer => customer.CustomerSegment==CustomerSegment).ToList();
         }
         if(!string.IsNullOrWhiteSpace(Gender))
         {
             Console.WriteLine($"Target Gender: {Gender}");
-            Customers= allCustomers.Where(customer => customer.Gender==Gender).ToList();
+            Customers= Customers.Where(customer => customer.Gender==Gender).ToList();
         }
 
         long endMilliseconds = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
