@@ -25,6 +25,13 @@ public class ProductsModel : PageModel
     [BindProperty(SupportsGet = true)]
     public string Supplier { get; set; }="";
 
+    [BindProperty(SupportsGet = true)]
+    public string SortBy {get; set;}
+
+    [BindProperty(SupportsGet = true)]
+    public bool SortAscending {get; set;}
+    public List<SelectListItem> SortColumns {get; set;} = new();
+
     public List<Product> Products {get; set;}
 
     public List<SelectListItem> CreateSelectListItems(List<Product> allProducts,string key)
@@ -76,6 +83,30 @@ public class ProductsModel : PageModel
         {
             Console.WriteLine($"Target Supplier: {Supplier}");
             Products= Products.Where(product => product.Supplier==Supplier).ToList();
+        }
+
+        List<string> allColumns=typeof(Product)
+                                     .GetProperties()
+                                     .Select(p => p.Name)
+                                     .ToList();  
+
+        SortColumns=allColumns.Select(val => new SelectListItem
+        {
+            Value = val.ToString(),
+            Text = val.ToString(),
+        }).ToList();
+
+        Console.WriteLine(SortBy);
+        if(!string.IsNullOrEmpty(SortBy))
+        {
+            Products=Products.OrderBy(product => product.GetType()
+                                        .GetProperty(SortBy)?
+                                        .GetValue(product, null)
+                                 ).ToList();
+        }
+        if(SortAscending==false)
+        {
+            Products.Reverse();
         }
 
         long endMilliseconds = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();

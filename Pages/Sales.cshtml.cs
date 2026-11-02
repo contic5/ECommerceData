@@ -47,6 +47,13 @@ public class SalesModel : PageModel
 
     public List<Sale> Sales { get; set; } = new();
 
+    [BindProperty(SupportsGet = true)]
+    public string SortBy {get; set;}
+
+    [BindProperty(SupportsGet = true)]
+    public bool SortAscending {get; set;}
+    public List<SelectListItem> SortColumns {get; set;} = new();
+
     public List<SelectListItem> CreateSelectListItems(List<Sale> allSales, string key)
     {
         var property = typeof(Sale).GetProperty(key)
@@ -103,6 +110,31 @@ public class SalesModel : PageModel
             Sales = Sales.Where(sale => sale.ReturnStatus == ReturnStatus).ToList();
         if (!string.IsNullOrWhiteSpace(MarketingChannel))
             Sales = Sales.Where(sale => sale.MarketingChannel == MarketingChannel).ToList();
+
+        Console.WriteLine(SortBy);
+
+        List<string> allColumns=typeof(Order)
+                                     .GetProperties()
+                                     .Select(p => p.Name)
+                                     .ToList();  
+
+        SortColumns=allColumns.Select(val => new SelectListItem
+        {
+            Value = val.ToString(),
+            Text = val.ToString(),
+        }).ToList();
+        
+        if(!string.IsNullOrEmpty(SortBy))
+        {
+            Sales=Sales.OrderBy(sale => sale.GetType()
+                                        .GetProperty(SortBy)?
+                                        .GetValue(sale, null)
+                                 ).ToList();
+        }
+        if(SortAscending==false)
+        {
+            Sales.Reverse();
+        }
 
         long endMilliseconds = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 

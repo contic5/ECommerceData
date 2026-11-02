@@ -7,8 +7,14 @@
 
 <div class="text-center">
     <h1 class="display-4">Products</h1>
-    <h2>Filters</h2>
     <form>
+    <h2>Sort By</h2>
+    <select asp-for="SortBy" asp-items="Model.SortColumns"></select>
+    <select asp-for="SortAscending">
+    <option value=true>- to +</option>
+    <option value=false>+ to -</option>
+    </select>
+    <h2>Filters</h2>
     <label asp-for="ProductCategory">Select a Category:</label>
     <select asp-for="ProductCategory" asp-items="Model.ProductCategoryOptions" class="form-control">
         <option value="">-- Choose a Category --</option>

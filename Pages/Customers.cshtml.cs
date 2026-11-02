@@ -27,6 +27,13 @@ public class CustomersModel : PageModel
 
     public List<Customer> Customers {get; set;}
 
+    [BindProperty(SupportsGet = true)]
+    public string SortBy {get; set;}
+
+    [BindProperty(SupportsGet = true)]
+    public bool SortAscending {get; set;}
+    public List<SelectListItem> SortColumns {get; set;} = new();
+
     public List<SelectListItem> CreateSelectListItems(List<Customer> allCustomers,string key)
     {
         var property = typeof(Customer).GetProperty(key) ?? throw new ArgumentException($"No public Customer property named '{key}'.", nameof(key));
@@ -68,6 +75,32 @@ public class CustomersModel : PageModel
         {
             Console.WriteLine($"Target Gender: {Gender}");
             Customers= Customers.Where(customer => customer.Gender==Gender).ToList();
+        }
+
+        Console.WriteLine(SortBy);
+
+        List<string> allColumns=typeof(Customer)
+                                     .GetProperties()
+                                     .Select(p => p.Name)
+                                     .ToList();  
+
+
+        SortColumns=allColumns.Select(val => new SelectListItem
+        {
+            Value = val.ToString(),
+            Text = val.ToString(),
+        }).ToList();
+
+        if(!string.IsNullOrEmpty(SortBy))
+        {
+            Customers=Customers.OrderBy(order => order.GetType()
+                                        .GetProperty(SortBy)?
+                                        .GetValue(order, null)
+                                 ).ToList();
+        }
+        if(SortAscending==false)
+        {
+            Customers.Reverse();
         }
 
         long endMilliseconds = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
