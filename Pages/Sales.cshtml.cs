@@ -4,6 +4,7 @@ using EcommerceData.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using static SharedFunctions;
 
 namespace ECommerceData.Pages;
 
@@ -52,27 +53,10 @@ public class SalesModel : PageModel
 
     [BindProperty(SupportsGet = true)]
     public bool SortAscending {get; set;}
-    public List<SelectListItem> SortColumns {get; set;} = new();
+    public List<SelectListItem> SortByItems {get; set;} = new();
 
     [BindProperty(SupportsGet = true)]
     public int PageNumber {get; set;}=1;
-
-    public List<SelectListItem> CreateSelectListItems(List<Sale> allSales, string key)
-    {
-        var property = typeof(Sale).GetProperty(key)
-            ?? throw new ArgumentException($"No public Sale property named '{key}'.", nameof(key));
-        var allValues = allSales
-            .Where(sale => sale is not null)
-            .Select(sale => property.GetValue(sale))
-            .Where(value => value is not null);
-        var uniqueValues = allValues.Distinct().OrderBy(value => value).ToList();
-
-        return uniqueValues.Select(value => new SelectListItem
-        {
-            Value = value!.ToString(),
-            Text = value.ToString(),
-        }).ToList();
-    }
 
     public void OnGet()
     {
@@ -85,15 +69,15 @@ public class SalesModel : PageModel
         Console.WriteLine("Sales Loaded");
 
         Sales = allSales;
-        OrderStatusOptions = CreateSelectListItems(allSales, nameof(Sale.OrderStatus));
-        SalesChannelOptions = CreateSelectListItems(allSales, nameof(Sale.SalesChannel));
-        CustomerSegmentOptions = CreateSelectListItems(allSales, nameof(Sale.CustomerSegment));
-        CustomerCountryOptions = CreateSelectListItems(allSales, nameof(Sale.CustomerCountry));
-        PaymentMethodOptions = CreateSelectListItems(allSales, nameof(Sale.PaymentMethod));
-        PaymentStatusOptions = CreateSelectListItems(allSales, nameof(Sale.PaymentStatus));
-        ShippingMethodOptions = CreateSelectListItems(allSales, nameof(Sale.ShippingMethod));
-        ReturnStatusOptions = CreateSelectListItems(allSales, nameof(Sale.ReturnStatus));
-        MarketingChannelOptions = CreateSelectListItems(allSales, nameof(Sale.MarketingChannel));
+        OrderStatusOptions = MakeSelectListItemsFromUniqueValues(allSales, nameof(Sale.OrderStatus));
+        SalesChannelOptions = MakeSelectListItemsFromUniqueValues(allSales, nameof(Sale.SalesChannel));
+        CustomerSegmentOptions = MakeSelectListItemsFromUniqueValues(allSales, nameof(Sale.CustomerSegment));
+        CustomerCountryOptions = MakeSelectListItemsFromUniqueValues(allSales, nameof(Sale.CustomerCountry));
+        PaymentMethodOptions = MakeSelectListItemsFromUniqueValues(allSales, nameof(Sale.PaymentMethod));
+        PaymentStatusOptions = MakeSelectListItemsFromUniqueValues(allSales, nameof(Sale.PaymentStatus));
+        ShippingMethodOptions = MakeSelectListItemsFromUniqueValues(allSales, nameof(Sale.ShippingMethod));
+        ReturnStatusOptions = MakeSelectListItemsFromUniqueValues(allSales, nameof(Sale.ReturnStatus));
+        MarketingChannelOptions = MakeSelectListItemsFromUniqueValues(allSales, nameof(Sale.MarketingChannel));
 
         if (!string.IsNullOrWhiteSpace(OrderStatus))
             Sales = Sales.Where(sale => sale.OrderStatus == OrderStatus).ToList();
@@ -115,17 +99,6 @@ public class SalesModel : PageModel
             Sales = Sales.Where(sale => sale.MarketingChannel == MarketingChannel).ToList();
 
         Console.WriteLine(SortBy);
-
-        List<string> allColumns=typeof(Order)
-                                     .GetProperties()
-                                     .Select(p => p.Name)
-                                     .ToList();  
-
-        SortColumns=allColumns.Select(val => new SelectListItem
-        {
-            Value = val.ToString(),
-            Text = val.ToString(),
-        }).ToList();
         
         if(!string.IsNullOrEmpty(SortBy))
         {
@@ -138,6 +111,12 @@ public class SalesModel : PageModel
         {
             Sales.Reverse();
         }
+
+        SortByItems=MakeSelectListItemsFromColumnNames(Sales[0]);
+
+        Sales=SortValues(Sales,SortBy,SortAscending).Select(item => (Sale)item).ToList();
+        
+        Sales=Slice(Sales,PageNumber).Select(item => (Sale)item).ToList();
 
         long endMilliseconds = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 

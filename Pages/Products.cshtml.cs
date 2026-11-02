@@ -31,7 +31,7 @@ public class ProductsModel : PageModel
 
     [BindProperty(SupportsGet = true)]
     public bool SortAscending {get; set;}
-    public List<SelectListItem> SortColumns {get; set;} = new();
+    public List<SelectListItem> SortByItems {get; set;} = new();
 
     public List<Product> Products {get; set;}
 
@@ -49,10 +49,10 @@ public class ProductsModel : PageModel
         Console.WriteLine("Products Loaded");
 
         Products=allProducts;
-        ProductCategoryOptions=SharedFunctions.CreateSelectListItems(allProducts,"ProductCategory");
-        ProductSubCategoryOptions=SharedFunctions.CreateSelectListItems(allProducts,"ProductSubCategory");
-        BrandOptions=SharedFunctions.CreateSelectListItems(allProducts,"Brand");
-        SupplierOptions=SharedFunctions.CreateSelectListItems(allProducts,"Supplier");
+        ProductCategoryOptions=SharedFunctions.MakeSelectListItemsFromUniqueValues(allProducts,"ProductCategory");
+        ProductSubCategoryOptions=SharedFunctions.MakeSelectListItemsFromUniqueValues(allProducts,"ProductSubCategory");
+        BrandOptions=SharedFunctions.MakeSelectListItemsFromUniqueValues(allProducts,"Brand");
+        SupplierOptions=SharedFunctions.MakeSelectListItemsFromUniqueValues(allProducts,"Supplier");
 
 
         if(!string.IsNullOrWhiteSpace(ProductCategory))
@@ -76,19 +76,12 @@ public class ProductsModel : PageModel
             Products= Products.Where(product => product.Supplier==Supplier).ToList();
         }
 
-        List<string> allColumns=typeof(Product)
-                                     .GetProperties()
-                                     .Select(p => p.Name)
-                                     .ToList();  
+        
+        SortByItems=MakeSelectListItemsFromColumnNames(Products[0]);
 
-        SortColumns=allColumns.Select(val => new SelectListItem
-        {
-            Value = val.ToString(),
-            Text = val.ToString(),
-        }).ToList();
-
-        Products=SharedFunctions.SortValues(Products,SortBy,SortAscending);
-        Products=SharedFunctions.Slice(Products,PageNumber);
+        Products=SortValues(Products,SortBy,SortAscending).Select(item => (Product)item).ToList();
+        
+        Products=Slice(Products,PageNumber).Select(item => (Product)item).ToList();
 
         long endMilliseconds = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
+using static SharedFunctions;
 namespace ECommerceData.Pages;
 
 public class OrdersModel : PageModel
@@ -16,7 +17,7 @@ public class OrdersModel : PageModel
 
     [BindProperty(SupportsGet = true)]
     public bool SortAscending {get; set;}
-    public List<SelectListItem> SortColumns {get; set;} = new();
+    public List<SelectListItem> SortByItems {get; set;} = new();
 
     [BindProperty(SupportsGet = true)]
     public int PageNumber {get; set;}=1;
@@ -31,30 +32,11 @@ public class OrdersModel : PageModel
         Orders=csv.GetRecords<Order>().ToList();
         Console.WriteLine("Orders Loaded");
         
-        List<string> allColumns=typeof(Order)
-                                     .GetProperties()
-                                     .Select(p => p.Name)
-                                     .ToList();  
+        SortByItems=MakeSelectListItemsFromColumnNames(Orders[0]);
 
-        SortColumns=allColumns.Select(val => new SelectListItem
-        {
-            Value = val.ToString(),
-            Text = val.ToString(),
-        }).ToList();
-
-        Console.WriteLine(SortBy);
-        if(!string.IsNullOrEmpty(SortBy))
-        {
-            Orders=Orders.OrderBy(order => order.GetType()
-                                        .GetProperty(SortBy)?
-                                        .GetValue(order, null)
-                                 ).ToList();
-        }
-        if(SortAscending==false)
-        {
-            Orders.Reverse();
-        }
-        Orders=Orders.GetRange(0,100);
+        Orders=SortValues(Orders,SortBy,SortAscending).Select(item => (Order)item).ToList();
+        
+        Orders=Slice(Orders,PageNumber).Select(item => (Order)item).ToList();
 
         long endMilliseconds = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 

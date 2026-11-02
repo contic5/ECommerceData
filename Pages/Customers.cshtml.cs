@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ECommerceData.Pages;
+using static SharedFunctions;
 
 public class CustomersModel : PageModel
 {
@@ -31,23 +32,12 @@ public class CustomersModel : PageModel
 
     [BindProperty(SupportsGet = true)]
     public bool SortAscending {get; set;}
-    public List<SelectListItem> SortColumns {get; set;} = new();
+    public List<SelectListItem> SortByItems {get; set;} = new();
 
     [BindProperty(SupportsGet = true)]
     public int PageNumber {get; set;}=1;
 
-    public List<SelectListItem> CreateSelectListItems(List<Customer> allCustomers,string key)
-    {
-        var property = typeof(Customer).GetProperty(key) ?? throw new ArgumentException($"No public Customer property named '{key}'.", nameof(key));
-        var allValues = allCustomers.Where(c => c is not null).Select(c => property.GetValue(c)).Where(value => value is not null);
-        var uniqueValues=allValues.Distinct().OrderBy(val => val).ToList();
-        List<SelectListItem>  res= uniqueValues.Select(val => new SelectListItem
-        {
-            Value = val.ToString(),
-            Text = val.ToString(),
-        }).ToList();
-        return res;
-    }
+    
     public void OnGet()
     {
         long startMilliseconds = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
@@ -59,9 +49,9 @@ public class CustomersModel : PageModel
         Console.WriteLine("Customers Loaded");
         
         Customers=allCustomers;
-        CustomerCountryOptions=CreateSelectListItems(allCustomers,"CustomerCountry");
-        CustomerSegmentOptions=CreateSelectListItems(allCustomers,"CustomerSegment");
-        GenderOptions=CreateSelectListItems(allCustomers,"Gender");
+        CustomerCountryOptions=MakeSelectListItemsFromUniqueValues(allCustomers,"CustomerCountry");
+        CustomerSegmentOptions=MakeSelectListItemsFromUniqueValues(allCustomers,"CustomerSegment");
+        GenderOptions=MakeSelectListItemsFromUniqueValues(allCustomers,"Gender");
 
         if(!string.IsNullOrWhiteSpace(CustomerCountry))
         {
@@ -81,29 +71,11 @@ public class CustomersModel : PageModel
 
         Console.WriteLine(SortBy);
 
-        List<string> allColumns=typeof(Customer)
-                                     .GetProperties()
-                                     .Select(p => p.Name)
-                                     .ToList();  
+        
+        SortByItems=MakeSelectListItemsFromColumnNames(Customers[0]);
+        Customers=SortValues(Customers,SortBy,SortAscending).Select(item => (Customer)item).ToList();
 
-
-        SortColumns=allColumns.Select(val => new SelectListItem
-        {
-            Value = val.ToString(),
-            Text = val.ToString(),
-        }).ToList();
-
-        if(!string.IsNullOrEmpty(SortBy))
-        {
-            Customers=Customers.OrderBy(order => order.GetType()
-                                        .GetProperty(SortBy)?
-                                        .GetValue(order, null)
-                                 ).ToList();
-        }
-        if(SortAscending==false)
-        {
-            Customers.Reverse();
-        }
+        Customers=Slice(Customers,PageNumber).Select(item => (Customer)item).ToList();
 
         long endMilliseconds = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
