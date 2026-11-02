@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ECommerceData.Pages;
+using static SharedFunctions;
 
 public class ProductsModel : PageModel
 {
@@ -34,22 +35,9 @@ public class ProductsModel : PageModel
 
     public List<Product> Products {get; set;}
 
-    [BindProperty(Name = "PageNumber", SupportsGet = true)]
+    [BindProperty(SupportsGet = true)]
     public int PageNumber {get; set;}=1;
-
-    public List<SelectListItem> CreateSelectListItems(List<Product> allProducts,string key)
-    {
-        var property = typeof(Product).GetProperty(key) ?? throw new ArgumentException($"No public Product property named '{key}'.", nameof(key));
-        var allValues = allProducts.Where(p => p is not null).Select(p => property.GetValue(p)).Where(value => value is not null);
-        var uniqueValues=allValues.Distinct().OrderBy(val => val).ToList();
-        List<SelectListItem>  res= uniqueValues.Select(val => new SelectListItem
-        {
-            Value = val.ToString(),
-            Text = val.ToString(),
-        }).ToList();
-        return res;
-    }
-
+    
     public void OnGet()
     {
         long startMilliseconds = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
@@ -61,10 +49,10 @@ public class ProductsModel : PageModel
         Console.WriteLine("Products Loaded");
 
         Products=allProducts;
-        ProductCategoryOptions=CreateSelectListItems(allProducts,"ProductCategory");
-        ProductSubCategoryOptions=CreateSelectListItems(allProducts,"ProductSubCategory");
-        BrandOptions=CreateSelectListItems(allProducts,"Brand");
-        SupplierOptions=CreateSelectListItems(allProducts,"Supplier");
+        ProductCategoryOptions=SharedFunctions.CreateSelectListItems(allProducts,"ProductCategory");
+        ProductSubCategoryOptions=SharedFunctions.CreateSelectListItems(allProducts,"ProductSubCategory");
+        BrandOptions=SharedFunctions.CreateSelectListItems(allProducts,"Brand");
+        SupplierOptions=SharedFunctions.CreateSelectListItems(allProducts,"Supplier");
 
 
         if(!string.IsNullOrWhiteSpace(ProductCategory))
@@ -99,18 +87,8 @@ public class ProductsModel : PageModel
             Text = val.ToString(),
         }).ToList();
 
-        Console.WriteLine(SortBy);
-        if(!string.IsNullOrEmpty(SortBy))
-        {
-            Products=Products.OrderBy(product => product.GetType()
-                                        .GetProperty(SortBy)?
-                                        .GetValue(product, null)
-                                 ).ToList();
-        }
-        if(SortAscending==false)
-        {
-            Products.Reverse();
-        }
+        Products=SharedFunctions.SortValues(Products,SortBy,SortAscending);
+        Products=SharedFunctions.Slice(Products,PageNumber);
 
         long endMilliseconds = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
