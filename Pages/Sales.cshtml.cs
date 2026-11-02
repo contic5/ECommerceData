@@ -54,6 +54,9 @@ public class SalesModel : PageModel
     public bool SortAscending {get; set;}
     public List<SelectListItem> SortColumns {get; set;} = new();
 
+    [BindProperty(SupportsGet = true)]
+    public int PageNumber {get; set;}=1;
+
     public List<SelectListItem> CreateSelectListItems(List<Sale> allSales, string key)
     {
         var property = typeof(Sale).GetProperty(key)

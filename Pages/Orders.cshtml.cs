@@ -17,6 +17,10 @@ public class OrdersModel : PageModel
     [BindProperty(SupportsGet = true)]
     public bool SortAscending {get; set;}
     public List<SelectListItem> SortColumns {get; set;} = new();
+
+    [BindProperty(SupportsGet = true)]
+    public int PageNumber {get; set;}=1;
+    
     public void OnGet()
     {
         long startMilliseconds = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();

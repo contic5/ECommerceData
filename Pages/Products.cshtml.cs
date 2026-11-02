@@ -34,6 +34,9 @@ public class ProductsModel : PageModel
 
     public List<Product> Products {get; set;}
 
+    [BindProperty(Name = "PageNumber", SupportsGet = true)]
+    public int PageNumber {get; set;}=1;
+
     public List<SelectListItem> CreateSelectListItems(List<Product> allProducts,string key)
     {
         var property = typeof(Product).GetProperty(key) ?? throw new ArgumentException($"No public Product property named '{key}'.", nameof(key));
