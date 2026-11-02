@@ -10,7 +10,6 @@ namespace ECommerceData.Pages;
 
 public class CustomersModel : PageModel
 {
-
     public List<SelectListItem> CustomerCountryOptions { get; set; } = new();
     [BindProperty(SupportsGet = true)]
     public string CustomerCountry { get; set; }="";
@@ -33,6 +32,9 @@ public class CustomersModel : PageModel
     [BindProperty(SupportsGet = true)]
     public bool SortAscending {get; set;}
     public List<SelectListItem> SortColumns {get; set;} = new();
+
+    [BindProperty(SupportsGet = true)]
+    public int PageNumber {get; set;}=1;
 
     public List<SelectListItem> CreateSelectListItems(List<Customer> allCustomers,string key)
     {

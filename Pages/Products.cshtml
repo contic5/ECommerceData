@@ -1,4 +1,4 @@
-﻿@page
+﻿@page "/Products/{PageNumber:int?}"
 @using EcommerceData.Models
 @model ProductsModel
 @{
@@ -37,6 +37,23 @@
 
     <button type="submit">Submit</button>
     </form>
+
+    @{
+        int pagesAdded=0;
+        @for(int i=Model.PageNumber-5;i<=Model.PageNumber+5;i++)
+        {
+            if(i>0)
+            {
+                <a asp-page="/Customers" asp-route-PageNumber=@i>@i</a>
+                pagesAdded+=1;
+
+                if(pagesAdded>=7)
+                {
+                    break;
+                }
+            }
+        }
+    }
 
     <h2>Customers</h2>
     <table>
