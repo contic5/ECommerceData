@@ -1,8 +1,8 @@
-﻿@page "/Orders/{PageNumber:int?}"
+@page "/Orders/{PageNumber:int?}"
 @using EcommerceData.Models
 @model OrdersModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Orders";
 }
 
 <div class="text-center">
@@ -17,22 +17,11 @@
     <button type="submit">Submit</button>
     </form>
 
+    
     @{
-        int pagesAdded=0;
-        @for(int i=Model.PageNumber-5;i<=Model.PageNumber+5;i++)
-        {
-            if(i>0)
-            {
-                <a asp-page="/Orders" asp-route-PageNumber=@i>@i</a>
-                pagesAdded+=1;
-
-                if(pagesAdded>=7)
-                {
-                    break;
-                }
-            }
-        }
+        var myDataModel = new { PageName = "Orders", PageNumber = Model.PageNumber};
     }
+    @await Html.PartialAsync("_MakePagesPartial", myDataModel)
 
     <h2>Orders</h2>
     <table>
@@ -70,4 +59,6 @@
     }
     </tbody>
     </table>
+    @await Html.PartialAsync("_MakePagesPartial", myDataModel)
+
 </div>

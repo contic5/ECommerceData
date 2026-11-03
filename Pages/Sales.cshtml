@@ -2,7 +2,7 @@
 @using EcommerceData.Models
 @model SalesModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Sales";
 }
 
 <div class="text-center">
@@ -15,70 +15,58 @@
     <option value=false>+ to -</option>
     </select>
     <h2>Filters</h2>
-    <label asp-for="OrderStatus">Select a Category:</label>
+    <label asp-for="OrderStatus">Select an Order Status:</label>
     <select asp-for="OrderStatus" asp-items="Model.OrderStatusOptions" class="form-control">
         <option value="">-- Choose a Category --</option>
     </select>
 
-    <label asp-for="SalesChannel">Select a SubCategory:</label>
+    <label asp-for="SalesChannel">Select a Sales Channel:</label>
     <select asp-for="SalesChannel" asp-items="Model.SalesChannelOptions" class="form-control">
-        <option value="">-- Choose a SubCategory --</option>
+        <option value="">-- Choose a Sales Channel --</option>
     </select>
 
-    <label asp-for="CustomerSegment">Select a Brand:</label>
+    <label asp-for="CustomerSegment">Select a Customer Segment:</label>
     <select asp-for="CustomerSegment" asp-items="Model.CustomerSegmentOptions" class="form-control">
-        <option value="">-- Choose a Brand --</option>
+        <option value="">-- Choose a Customer Segment --</option>
     </select>
 
-    <label asp-for="CustomerCountry">Select a Supplier:</label>
+    <label asp-for="CustomerCountry">Select a Country:</label>
     <select asp-for="CustomerCountry" asp-items="Model.CustomerCountryOptions" class="form-control">
-        <option value="">-- Choose a Supplier --</option>
+        <option value="">-- Choose a Country --</option>
     </select>
 
-    <label asp-for="PaymentMethod">Select a Supplier:</label>
+    <label asp-for="PaymentMethod">Select a Payment Method:</label>
     <select asp-for="PaymentMethod" asp-items="Model.PaymentMethodOptions" class="form-control">
-        <option value="">-- Choose a Supplier --</option>
+        <option value="">-- Choose a Payment Method --</option>
     </select>
 
-    <label asp-for="PaymentStatus">Select a Supplier:</label>
+    <label asp-for="PaymentStatus">Select a Payment Status:</label>
     <select asp-for="PaymentStatus" asp-items="Model.PaymentStatusOptions" class="form-control">
-        <option value="">-- Choose a Supplier --</option>
+        <option value="">-- Choose a Payment Status --</option>
     </select>
 
-    <label asp-for="ShippingMethod">Select a Supplier:</label>
+    <label asp-for="ShippingMethod">Select a Shipping Method:</label>
     <select asp-for="ShippingMethod" asp-items="Model.ShippingMethodOptions" class="form-control">
-        <option value="">-- Choose a Supplier --</option>
+        <option value="">-- Choose a Shipping Method --</option>
     </select>
 
-    <label asp-for="ReturnStatus">Select a Supplier:</label>
+    <label asp-for="ReturnStatus">Select a Return Status:</label>
     <select asp-for="ReturnStatus" asp-items="Model.ReturnStatusOptions" class="form-control">
-        <option value="">-- Choose a Supplier --</option>
+        <option value="">-- Choose a Return Status --</option>
     </select>
 
-    <label asp-for="MarketingChannel">Select a Supplier:</label>
+    <label asp-for="MarketingChannel">Select a Marketing Channel:</label>
     <select asp-for="MarketingChannel" asp-items="Model.MarketingChannelOptions" class="form-control">
-        <option value="">-- Choose a Supplier --</option>
+        <option value="">-- Choose a Marketing Channel --</option>
     </select>
 
     <button type="submit">Submit</button>
     </form>
 
-    @{
-        int pagesAdded=0;
-        @for(int i=Model.PageNumber-5;i<=Model.PageNumber+5;i++)
-        {
-            if(i>0)
-            {
-                <a asp-page="/Sales" asp-route-PageNumber=@i>@i</a>
-                pagesAdded+=1;
-
-                if(pagesAdded>=7)
-                {
-                    break;
-                }
-            }
-        }
+     @{
+        var myDataModel = new { PageName = "Sales", PageNumber = Model.PageNumber};
     }
+    @await Html.PartialAsync("_MakePagesPartial", myDataModel)
 
     <h2>Sales</h2>
     <table>
@@ -186,4 +174,6 @@
     }
     </tbody>
     </table>
+
+    @await Html.PartialAsync("_MakePagesPartial", myDataModel)
 </div>
