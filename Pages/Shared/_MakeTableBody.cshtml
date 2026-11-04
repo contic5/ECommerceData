@@ -1,0 +1,20 @@
+@using MiniExcelLibs
+@using System.Reflection
+@model dynamic
+<tbody>
+    @{
+        List<PropertyInfo> properties=SharedFunctions.getAllProperties(Model.items[0]);
+
+        <tbody>
+        @foreach(Object item in Model.items)
+        {
+            <tr>
+            @foreach(PropertyInfo property in properties)
+            {
+                <td>@property.GetValue(item)</td>
+            }
+            </tr>
+        }
+        </tbody>
+    }
+</tbody>

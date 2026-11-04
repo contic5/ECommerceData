@@ -40,38 +40,9 @@
     @await Html.PartialAsync("_MakePagesPartial", myDataModel)
 
     <h2>Customers</h2>
-    <table>
-    <thead>
-    <tr>
-    <th>Name</th>
-    <th>Age</th>
-    <th>Gender</th>
-    <th>Segment</th>
-    <th>City</th>
-    <th>State</th>
-    <th>Country</th>
-    <th>Region</th>
-    <th>Postal Code</th>
-    <th>Acquisition Cost</th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach(Customer customer in Model.Customers)
-    {
-        <tr>
-        <td>@customer.CustomerName</td>
-        <td>@customer.CustomerAge</td>
-        <td>@customer.Gender</td>
-        <td>@customer.CustomerSegment</td>
-        <td>@customer.CustomerCity</td>
-        <td>@customer.CustomerState</td>
-        <td>@customer.CustomerCountry</td>
-        <td>@customer.Region</td>
-        <td>@customer.CustomerPostalCode</td>
-        <td>@customer.CustomerAcquisitionCost</td>
-        </tr>
-    }
-    </tbody>
+     <table>
+    @await Html.PartialAsync(partialViewName: "_MakeTableHead", new {firstItem=Model.Customers[0]})
+    @await Html.PartialAsync(partialViewName:"_MakeTableBody",new {items=Model.Customers})
     </table>
     @await Html.PartialAsync("_MakePagesPartial", myDataModel)
 </div>

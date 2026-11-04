@@ -1,0 +1,16 @@
+@model dynamic
+
+<thead>
+    @{
+        List<string> allColumns=SharedFunctions.getColumnNames(Model.firstItem);
+
+        <thead>
+        <tr>
+        @foreach(string columns in allColumns)
+        {
+            <th>@columns</th>
+        }
+        </tr>
+        </thead>
+    }
+</thead>

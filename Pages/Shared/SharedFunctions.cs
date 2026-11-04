@@ -1,9 +1,11 @@
 
-
+using System;
+using System.Reflection;
 using System.Reflection.Metadata.Ecma335;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.VisualBasic;
+using MiniExcelLibs;
 
 public class SharedFunctions
 {
@@ -18,7 +20,7 @@ public class SharedFunctions
             arr=arr.OrderBy(product => product.GetType()
                                         .GetProperty(SortBy)?
                                         .GetValue(product, null)
-                                 ).ToList();
+                            ).ToList();
         }
         if(SortAscending==false)
         {
@@ -51,5 +53,17 @@ public class SharedFunctions
             Text = val.ToString(),
         }).ToList();
         return res;
+    }
+    public static List<string> getColumnNames(Object firstItem)
+    {
+        List<string> allColumns=firstItem.GetType()
+                                     .GetProperties()
+                                     .Select(p => p.Name)
+                                     .ToList();  
+        return allColumns;
+    }
+    public static List<PropertyInfo> getAllProperties(Object firstItem)
+    {
+        return firstItem.GetType().GetProperties().ToList();
     }
 }
