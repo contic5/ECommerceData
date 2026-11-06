@@ -10,6 +10,7 @@ public class IndexModel : PageModel
 {
     public void OnGet()
     {
+        /*
         long startMilliseconds = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
         Console.WriteLine("Customers Loading");
@@ -40,5 +41,6 @@ public class IndexModel : PageModel
 
         long milliseconds=endMilliseconds-startMilliseconds;
         Console.WriteLine($"Runtime: {milliseconds} ms");
+        */
     }
 }

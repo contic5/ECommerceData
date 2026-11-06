@@ -19,5 +19,17 @@
     <PackageReference Include="CsvHelper" Version="33.1.0" />
     <PackageReference Include="MiniExcel" Version="1.46.0" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Data/**/*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+  <Target Name="ZipPublishOutput" AfterTargets="Publish">
+    <ZipDirectory 
+        SourceDirectory="$(PublishDir)" 
+        DestinationFile="$(MSBuildProjectDirectory)/bin/$(Configuration)/publish.zip" 
+        Overwrite="true" />
+  </Target>
 
 </Project>

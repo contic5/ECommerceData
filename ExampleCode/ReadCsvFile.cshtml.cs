@@ -18,6 +18,10 @@ public class ReadCsvFileModel : PageModel
     {
         /*
         string filePath = "PotentialDemoSongs.csv"; // Replace with your actual file path
+        var filePath = Path.Combine(
+        _environment.ContentRootPath,
+        "Data",
+        "customer_master.csv")
 
         using (var reader = new StreamReader(filePath))
         using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
